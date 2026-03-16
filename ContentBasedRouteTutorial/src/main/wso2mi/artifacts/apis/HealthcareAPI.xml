@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<api context="/healthcare" name="HealthcareAPI" xmlns="http://ws.apache.org/ns/synapse">
+    <resource methods="POST" uri-template="/categories/{category}/reserve">
+        <inSequence>
+        <switch  source="${payload.hospital}" >
+                <case regex="grand oak community hospital">
+                    <log category="INFO" logMessageID="false" logFullPayload="false" description="GrandOak Log">
+                        <message>Routing to: ${payload.hospital}</message>
+                    </log>
+                    <http.post configKey="GrandOakConn">
+                        <relativePath>/categories/${params.pathParams.category}/reserve</relativePath>
+                        <headers>[]</headers>
+                        <requestBodyType>JSON</requestBodyType>
+                        <requestBodyJson>${payload}</requestBodyJson>
+                        <forceScAccepted>false</forceScAccepted>
+                        <disableChunking>false</disableChunking>
+                        <forceHttp10>false</forceHttp10>
+                        <noKeepAlive>false</noKeepAlive>
+                        <forcePostPutNobody>false</forcePostPutNobody>
+                        <responseVariable>hospital_res</responseVariable>
+                        <overwriteBody>true</overwriteBody>
+                    </http.post>
+                </case>
+                <case regex="clemency medical center">
+                    <log category="INFO" logMessageID="false" logFullPayload="false" description="Clemency Log">
+                        <message>Routing to: ${payload.hospital}</message>
+                    </log>
+                    <http.post configKey="ClemencyConn">
+                        <relativePath>/categories/${params.pathParams.category}/reserve</relativePath>
+                        <headers>[]</headers>
+                        <requestBodyType>JSON</requestBodyType>
+                        <requestBodyJson>${payload}</requestBodyJson>
+                        <forceScAccepted>false</forceScAccepted>
+                        <disableChunking>false</disableChunking>
+                        <forceHttp10>false</forceHttp10>
+                        <noKeepAlive>false</noKeepAlive>
+                        <forcePostPutNobody>false</forcePostPutNobody>
+                        <responseVariable>hospital_res</responseVariable>
+                        <overwriteBody>true</overwriteBody>
+                    </http.post>
+                </case>
+                <case regex="pine valley community hospital">
+                    <log category="INFO" logMessageID="false" logFullPayload="false" description="PineValley Log">
+                        <message>Routing to: ${payload.hospital}</message>
+                    </log>
+                    <http.post configKey="PineValleyConn">
+                        <relativePath>/categories/${params.pathParams.category}/reserve</relativePath>
+                        <headers>[]</headers>
+                        <requestBodyType>JSON</requestBodyType>
+                        <requestBodyJson>${payload}</requestBodyJson>
+                        <forceScAccepted>false</forceScAccepted>
+                        <disableChunking>false</disableChunking>
+                        <forceHttp10>false</forceHttp10>
+                        <noKeepAlive>false</noKeepAlive>
+                        <forcePostPutNobody>false</forcePostPutNobody>
+                        <responseVariable>hospital_res</responseVariable>
+                        <overwriteBody>true</overwriteBody>
+                    </http.post>
+                </case>
+                <default>
+                    <log category="ERROR" logMessageID="false" logFullPayload="false" description="Fault Log">
+                        <message>Invalid hospital: ${payload.hospital}</message>
+                    </log>
+                </default>
+            </switch>
+            <respond/>
+        </inSequence>
+        <faultSequence>
+        </faultSequence>
+    </resource>
+</api>
