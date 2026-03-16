@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<api name="HealthcareAPI" context="/healthcare" xmlns="http://ws.apache.org/ns/synapse">
+    <resource methods="GET" uri-template="/querydoctor/{category}">
+        <inSequence>
+            <log category="INFO" logMessageID="false" logFullPayload="false">
+                <message></message>
+                <property name="Log Property message" value="&quot;Welcome to HealthcareService&quot;"/>
+            </log>
+            <call>
+                <endpoint key="QueryDoctorEP"/>
+            </call>
+            <respond/>
+        </inSequence>
+        <faultSequence>
+        </faultSequence>
+    </resource>
+</api>
