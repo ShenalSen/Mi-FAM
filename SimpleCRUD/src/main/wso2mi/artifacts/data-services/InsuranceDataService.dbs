@@ -1,0 +1,135 @@
+<data name="InsuranceDataService" serviceNamespace="" serviceGroup="" transports="http https" disableStreaming="true">
+    <description/>
+    <config id="insurance">
+        <property name="driverClassName">com.mysql.cj.jdbc.Driver</property>
+        <property name="url">jdbc:mysql://localhost:3306/insurance</property>
+        <property name="username">root</property>
+        <property name="password">12345</property>
+    </config>
+
+    <!-- get all products -->
+    <query id="getAllProducts" useConfig="insurance">
+        <sql>SELECT * FROM products</sql>
+        <result outputType="json">
+            {
+            "products": {
+            "product": [
+            {
+            "product_id": "$product_id",
+            "name": "$name",
+            "description": "$description",
+            "coverage_type": "$coverage_type",
+            "coverage_amount": "$coverage_amount",
+            "deductible": "$deductible",
+            "premium": "$premium"
+            }
+            ]
+            }
+            }
+        </result>
+    </query>
+    <resource method="GET" path="/products" disableStreaming="true">
+        <call-query href="getAllProducts"/>
+    </resource>
+    <operation name="getAllProducts" disableStreaming="true">
+        <call-query href="getAllProducts"/>
+    </operation>
+
+    <!-- get customer details by customer id -->
+    <query id="GetCustomerQuery" useConfig="insurance">
+        <sql>SELECT first_name, last_name, email FROM customers WHERE customer_id = :customer_id</sql>
+        <param name="customer_id" paramType="SCALAR" sqlType="STRING" type="IN"/>
+        <result outputType="json">
+            {
+            "customers": {
+            "customer": [
+            {
+            "first_name": "$first_name",
+            "last_name": "$last_name",
+            "email": "$email"
+            }
+            ]
+            }
+            }
+        </result>
+    </query>
+    <resource method="GET" path="customer/{customer_id}" disableStreaming="true">
+        <call-query href="GetCustomerQuery">
+            <with-param name="customer_id" query-param="customer_id"/>
+        </call-query>
+    </resource>
+    <operation name="getCustomerById" disableStreaming="true">
+        <call-query href="GetCustomerQuery"/>
+    </operation>
+
+    <!-- add a new product -->
+    <query id="AddProductQuery" useConfig="insurance">
+        <sql>
+            INSERT INTO products (name, description, coverage_type, coverage_amount, deductible, premium) VALUES (:name, :description, :coverage_type, :coverage_amount, :deductible, :premium)
+        </sql>
+        <param name="name" paramType="SCALAR" sqlType="STRING" type="IN"/>
+        <param name="description" paramType="SCALAR" sqlType="STRING" type="IN"/>
+        <param name="coverage_type" paramType="SCALAR" sqlType="STRING" type="IN"/>
+        <param name="coverage_amount" paramType="SCALAR" sqlType="DOUBLE" type="IN"/>
+        <param name="deductible" paramType="SCALAR" sqlType="DOUBLE" type="IN"/>
+        <param name="premium" paramType="SCALAR" sqlType="STRING" type="IN"/>
+    </query>
+    <resource method="POST" path="/product" returnRequestStatus="true" disableStreaming="true">
+        <call-query href="AddProductQuery">
+            <with-param name="name" query-param="name"/>
+            <with-param name="description" query-param="description"/>
+            <with-param name="coverage_type" query-param="coverage_type"/>
+            <with-param name="coverage_amount" query-param="coverage_amount"/>
+            <with-param name="deductible" query-param="deductible"/>
+            <with-param name="premium" query-param="premium"/>
+        </call-query>
+    </resource>
+    <operation name="addProduct" disableStreaming="true">
+        <call-query href="AddProductQuery"/>
+    </operation>
+
+    <!-- deleteProduct -->
+    <query id="deleteProduct" useConfig="insurance">
+        <sql>DELETE FROM products WHERE product_id = :product_id</sql>
+        <param name="product_id" paramType="SCALAR" sqlType="STRING" type="IN"/>
+    </query>
+    <resource method="DELETE" path="/product/{product_id}" returnRequestStatus="true" disableStreaming="true">
+        <call-query href="deleteProduct">
+            <with-param name="product_id" query-param="product_id"/>
+        </call-query>
+    </resource>
+    <operation name="deleteProduct" disableStreaming="true">
+        <call-query href="deleteProduct"/>
+    </operation>
+
+    <!-- updateProduct -->
+    <query id="updateProduct" useConfig="insurance">
+        <sql>
+            UPDATE products SET name = :name, description = :description, coverage_type = :coverage_type,
+            coverage_amount = :coverage_amount, deductible = :deductible, premium = :premium
+            WHERE product_id = :product_id
+        </sql>
+        <param name="product_id" paramType="SCALAR" sqlType="STRING" type="IN"/>
+        <param name="name" paramType="SCALAR" sqlType="STRING" type="IN"/>
+        <param name="description" paramType="SCALAR" sqlType="STRING" type="IN"/>
+        <param name="coverage_type" paramType="SCALAR" sqlType="STRING" type="IN"/>
+        <param name="coverage_amount" paramType="SCALAR" sqlType="DOUBLE" type="IN"/>
+        <param name="deductible" paramType="SCALAR" sqlType="DOUBLE" type="IN"/>
+        <param name="premium" paramType="SCALAR" sqlType="STRING" type="IN"/>
+    </query>
+    <resource method="PUT" path="/product/{product_id}" returnRequestStatus="true" disableStreaming="true">
+        <call-query href="updateProduct">
+            <with-param name="product_id" query-param="product_id"/>
+            <with-param name="name" query-param="name"/>
+            <with-param name="description" query-param="description"/>
+            <with-param name="coverage_type" query-param="coverage_type"/>
+            <with-param name="coverage_amount" query-param="coverage_amount"/>
+            <with-param name="deductible" query-param="deductible"/>
+            <with-param name="premium" query-param="premium"/>
+        </call-query>
+    </resource>
+    <operation name="updateProduct" disableStreaming="true">
+        <call-query href="updateProduct"/>
+    </operation>
+
+</data>
