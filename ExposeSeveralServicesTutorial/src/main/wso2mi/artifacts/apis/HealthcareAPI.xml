@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<api context="/healthcare" name="HealthcareAPI" xmlns="http://ws.apache.org/ns/synapse">
+    <resource methods="POST" uri-template="/categories/{category}/reserve">
+        <inSequence>
+            <variable name="hospital_id" type="STRING" expression="${payload.hospital_id}"/>
+            <variable name="CardNumber" type="STRING" expression="${payload.cardNo}"/>
+            <http.post configKey="CommonServiceConn">
+                <relativePath>/${vars.hospital_id}/categories/${params.pathParams.category}/reserve</relativePath>
+                <headers>[]</headers>
+                <requestBodyType>JSON</requestBodyType>
+                <requestBodyJson>${payload}</requestBodyJson>
+                <forceScAccepted>false</forceScAccepted>
+                <disableChunking>false</disableChunking>
+                <forceHttp10>false</forceHttp10>
+                <noKeepAlive>false</noKeepAlive>
+                <forcePostPutNobody>false</forcePostPutNobody>
+                <responseVariable>HospitalServiceRes</responseVariable>
+                <overwriteBody>true</overwriteBody>
+            </http.post>
+            <variable name="AppointmentId" type="STRING" expression="${payload.appointmentNumber}"/>
+            <variable name="DoctorDetails" type="JSON" expression="${payload.doctor}"/>
+            <variable name="PatientDetails" type="JSON" expression="${payload.patient}"/>
+            <http.get configKey="CommonServiceConn">
+                <relativePath>/${vars.hospital_id}/categories/appointments/${vars.AppointmentId}/fee</relativePath>
+                <headers>[]</headers>
+                <forceScAccepted>false</forceScAccepted>
+                <disableChunking>false</disableChunking>
+                <forceHttp10>false</forceHttp10>
+                <noKeepAlive>false</noKeepAlive>
+                <responseVariable>http_get_1</responseVariable>
+                <overwriteBody>true</overwriteBody>
+            </http.get>
+            <payloadFactory media-type="json" template-type="default">
+                <format>{
+                    "appointmentNumber":${vars.AppointmentId},
+                    "doctor":${vars.DoctorDetails},
+                    "patient":${vars.PatientDetails},
+                    "fee":${payload.actualFee},
+                    "confirmed":"false",
+                    "card_number":"${vars.CardNumber}"
+                    }
+</format>
+            </payloadFactory>
+            <http.post configKey="CommonServiceConn">
+                <relativePath>/healthcare/payments</relativePath>
+                <headers>[]</headers>
+                <requestBodyType>JSON</requestBodyType>
+                <requestBodyJson>${payload}</requestBodyJson>
+                <forceScAccepted>false</forceScAccepted>
+                <disableChunking>false</disableChunking>
+                <forceHttp10>false</forceHttp10>
+                <noKeepAlive>false</noKeepAlive>
+                <forcePostPutNobody>false</forcePostPutNobody>
+                <responseVariable>http_post_1</responseVariable>
+                <overwriteBody>true</overwriteBody>
+            </http.post>
+            <log category="INFO" logFullPayload="true"/>
+            <respond/>
+        </inSequence>
+        <faultSequence>
+        </faultSequence>
+    </resource>
+</api>
