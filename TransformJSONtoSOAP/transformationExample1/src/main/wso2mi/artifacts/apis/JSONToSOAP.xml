@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<api context="/stockorder_api" name="JSONToSOAP" xmlns="http://ws.apache.org/ns/synapse">
+    <resource methods="GET POST PUT">
+        <inSequence>
+            <payloadFactory media-type="xml" template-type="default">
+                <format>
+                    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ser="http://services.samples" xmlns:xsd="http://services.samples/xsd">
+                        <soapenv:Header/>
+                        <soapenv:Body>
+                            <ser:placeOrder>
+                                <ser:order>
+                                    <xsd:symbol>$1</xsd:symbol>
+                                    <xsd:price>$2</xsd:price>
+                                    <xsd:quantity>$3</xsd:quantity>
+                                </ser:order>
+                            </ser:placeOrder>
+                        </soapenv:Body>
+                    </soapenv:Envelope>
+                </format>
+                <args>
+                    <arg expression="$.placeOrder.order.symbol" evaluator="json"/>
+                    <arg expression="$.placeOrder.order.price" evaluator="json"/>
+                    <arg expression="$.placeOrder.order.quantity" evaluator="json"/>
+                </args>
+            </payloadFactory>
+            <log category="INFO" level="full"/>
+            <call>
+                <endpoint key="SimpleStockEp"/>
+            </call>
+            <property name="messageType" scope="axis2" type="STRING" value="application/json"/>
+            <respond/>
+        </inSequence>
+        <faultSequence>
+        </faultSequence>
+    </resource>
+</api>
