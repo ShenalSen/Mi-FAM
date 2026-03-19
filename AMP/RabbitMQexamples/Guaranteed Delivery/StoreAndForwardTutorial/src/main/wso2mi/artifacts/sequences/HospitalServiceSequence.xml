@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="HospitalServiceSequence" trace="disable" xmlns="http://ws.apache.org/ns/synapse">
+    <http.post configKey="HospitalConnection">
+        <relativePath>/${payload.hospital_id}/categories/${params.pathParams.category}/reserve</relativePath>
+        <headers>[]</headers>
+        <requestBodyType>JSON</requestBodyType>
+        <requestBodyJson>${payload}</requestBodyJson>
+        <forceScAccepted>false</forceScAccepted>
+        <disableChunking>false</disableChunking>
+        <forceHttp10>false</forceHttp10>
+        <noKeepAlive>false</noKeepAlive>
+        <forcePostPutNobody>false</forcePostPutNobody>
+        <responseVariable>http_post_1</responseVariable>
+        <overwriteBody>true</overwriteBody>
+    </http.post>
+    <log category="INFO" logMessageID="false" logFullPayload="false">
+        <message>Payload: ${payload}</message>
+    </log>
+    <drop/>
+</sequence>
