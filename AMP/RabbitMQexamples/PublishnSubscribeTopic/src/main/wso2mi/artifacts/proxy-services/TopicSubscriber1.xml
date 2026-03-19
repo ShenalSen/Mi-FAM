@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proxy xmlns="http://ws.apache.org/ns/synapse" name="TopicSubscriber1" transports="rabbitmq" startOnLoad="true">
+    <description/>
+    <target>
+        <inSequence>
+            <log level="custom">
+                <property name="Message Received" expression="//Message"/>
+            </log>
+        </inSequence>
+    </target>
+    <parameter name="rabbitmq.queue.routing.key">topic1</parameter>
+    <parameter name="rabbitmq.exchange.name">amq.topic</parameter>
+    <parameter name="rabbitmq.queue.name">queue2</parameter>
+    <parameter name="rabbitmq.connection.factory">AMQPConnectionFactory</parameter>
+    <parameter name="rabbitmq.message.content.type">application/xml</parameter>
+</proxy>

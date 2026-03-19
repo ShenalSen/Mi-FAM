@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proxy xmlns="http://ws.apache.org/ns/synapse" name="TopicPublisher" transports="http https" startOnLoad="true">
+  <description/>
+  <target>
+      <inSequence>
+          <property name="OUT_ONLY" value="true"/>
+          <property name="FORCE_SC_ACCEPTED" value="true" scope="axis2"/>
+          <send>
+              <endpoint>
+                  <address uri="rabbitmq:/topic1?rabbitmq.server.host.name=localhost&amp;rabbitmq.server.port=5672&amp;rabbitmq.server.user.name=guest&amp;rabbitmq.server.password=guest&amp;rabbitmq.exchange.name=amq.topic"/>
+              </endpoint>
+          </send>
+      </inSequence>
+  </target>
+</proxy>
