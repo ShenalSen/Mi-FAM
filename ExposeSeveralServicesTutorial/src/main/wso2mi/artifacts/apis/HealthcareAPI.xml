@@ -39,7 +39,7 @@
                     "confirmed":"false",
                     "card_number":"${vars.CardNumber}"
                     }
-</format>
+                </format>
             </payloadFactory>
             <http.post configKey="CommonServiceConn">
                 <relativePath>/healthcare/payments</relativePath>
