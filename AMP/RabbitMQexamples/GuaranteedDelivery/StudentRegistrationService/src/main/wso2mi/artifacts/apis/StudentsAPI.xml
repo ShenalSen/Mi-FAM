@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<api context="/students" name="StudentsAPI" xmlns="http://ws.apache.org/ns/synapse">
+    <resource methods="POST" uri-template="/">
+        <inSequence>
+            <log level="custom">
+                <property name="Message" value="Backend received enrollment - DROPPING CONNECTION"/>
+            </log>
+            <drop/>
+        </inSequence>
+        <faultSequence>
+        </faultSequence>
+    </resource>
+</api>
