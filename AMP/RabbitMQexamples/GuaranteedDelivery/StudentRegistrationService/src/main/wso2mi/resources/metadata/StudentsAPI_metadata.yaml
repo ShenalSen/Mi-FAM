@@ -1,0 +1,10 @@
+---
+key: "StudentsAPI-1.0.0"
+name : "StudentsAPI"
+displayName : "StudentsAPI"
+description: "StudentsAPI"
+version: "1.0.0"
+serviceUrl: "https://{MI_HOST}:{MI_PORT}/students"
+definitionType: "OAS3"
+securityType: "BASIC"
+mutualSSLEnabled: false
