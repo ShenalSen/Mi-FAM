@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="ErrorSequence"
+ xmlns="http://ws.apache.org/ns/synapse"
+ trace="disable">
+
+    <log level="custom">
+        <property name="MESSAGE"
+                  value="Publishing Failed Rolling Back"/>
+        <property name="ERROR_CODE"
+                  expression="get-property('ERROR_CODE')"/>
+    </log>
+
+    <property name="ACKNOWLEDGE"
+              value="false"
+              scope="axis2"
+              type="STRING"/>
+
+</sequence>
