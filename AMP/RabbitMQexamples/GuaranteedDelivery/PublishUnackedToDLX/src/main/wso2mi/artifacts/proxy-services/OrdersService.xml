@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proxy xmlns="http://ws.apache.org/ns/synapse"
+    name="OrdersService"
+    startOnLoad="true"
+    statistics="disable"
+    trace="disable"
+    transports="rabbitmq">
+   <target>
+    <inSequence>
+      <log level="custom">
+          <property expression="$body" name="Message Received"/>
+      </log>
+      <call blocking="true">
+          <endpoint>
+            <http uri-template="http://localhost:8290/orders"/>
+          </endpoint>
+      </call>
+      <log level="custom">
+          <property name="Status" value="The message process successfully"/>
+      </log>
+    </inSequence>
+    <faultSequence>
+      <log level="custom">
+          <property name="Status" value="Could not process the message"/>
+      </log>
+      <property name="SET_ROLLBACK_ONLY" scope="axis2" value="true"/>
+    </faultSequence>
+   </target>
+   <parameter name="rabbitmq.queue.autodeclare">false</parameter>
+   <parameter name="rabbitmq.exchange.name">orders-exchange</parameter>
+   <parameter name="rabbitmq.queue.auto.ack">false</parameter>
+   <parameter name="rabbitmq.queue.name">orders</parameter>
+   <parameter name="rabbitmq.connection.factory">AMQPConnectionFactory</parameter>
+   <parameter name="rabbitmq.message.content.type">application/xml</parameter>
+</proxy>
+
+
+<!-- Main Queue: orders Exchange: orders-exchange Routing Key: orders
+
+rabbitmqadmin declare queue name=orders durable=true arguments='{"x-dead-letter-exchange":"orders-error-exchange"}'
+rabbitmqadmin declare exchange name=orders-exchange type=direct durable=true
+rabbitmqadmin declare binding source=orders-exchange destination=orders routing_key=orders 
+-->
+
+<!-- Error Queue: orders-error Exchange: orders-error-exchange Routing Key: orders-error
+
+rabbitmqadmin declare queue name=orders-error durable=true
+rabbitmqadmin declare exchange name=orders-error-exchange type=direct durable=true
+rabbitmqadmin declare binding source=orders-error-exchange destination=orders-error routing_key=orders 
+-->
+
+<!-- rabbitmqadmin publish exchange=orders-exchange routing_key=orders payload="<order><id>123</id><item>Book</item><quantity>2</quantity></order>"  -->
