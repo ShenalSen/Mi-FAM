@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<endpoint name="RabbitMQ-Endpoint" xmlns="http://ws.apache.org/ns/synapse">
+    <address uri="rabbitmq:/?rabbitmq.connection.factory=SampleConnectionFactory&amp;rabbitmq.queue.name=queue2&amp;rabbitmq.exchange.name=exchange2&amp;rabbitmq.queue.routing.key=queue2&amp;rabbitmq.queue.autodeclare=false&amp;rabbitmq.publisher.confirms.enabled=true"/>
+</endpoint>
