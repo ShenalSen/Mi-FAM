@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proxy name="RabbitMqProxy" startOnLoad="true" transports="rabbitmq"
+ xmlns="http://ws.apache.org/ns/synapse">
+
+    <target faultSequence="ErrorSequence"
+            inSequence="RabbitMqProxyServiceInSequence">
+        <outSequence/>
+    </target>
+
+    <parameter name="rabbitmq.message.error.exchange.name">LAST_Q</parameter>
+    <parameter name="rabbitmq.message.error.queue.routing.key">lastRk</parameter>
+
+    <parameter name="rabbitmq.queue.auto.ack">false</parameter>
+    <parameter name="rabbitmq.queue.name">MAIN_Q</parameter>
+
+    <parameter name="rabbitmq.connection.factory">AMQPConnectionFactory</parameter>
+
+    <parameter name="rabbitmq.queue.autodeclare">false</parameter>
+
+    <parameter name="rabbitmq.message.content.type">application/json</parameter>
+
+    <parameter name="rabbitmq.channel.consumer.qos">1</parameter>
+    <parameter name="rabbitmq.concurrent.consumer.count">1</parameter>
+
+    <parameter name="rabbitmq.AckMode">clientAck</parameter>
+
+    <parameter name="rabbitmq.inbound.ack.max.wait.time">30000</parameter>
+
+    <parameter name="rabbitmq.proxy.throttle.enabled">true</parameter>
+    <parameter name="rabbitmq.proxy.throttle.mode">FIXED_INTERVAL</parameter>
+    <parameter name="rabbitmq.proxy.throttle.count">100</parameter>
+    <parameter name="rabbitmq.proxy.throttle.timeUnit">minute</parameter>
+
+    <parameter name="rabbitmq.message.max.dead.lettered.count">5</parameter>
+
+</proxy>
+
+
+<!--
+# 1. Create the Main Queue
+rabbitmqadmin declare queue name=MAIN_Q durable=true arguments='{"x-dead-letter-exchange": "LAST_Q", "x-dead-letter-routing-key": "lastRk"}'
+
+# 2. Create the Last (Error) Exchange
+rabbitmqadmin declare exchange name=LAST_Q type=direct durable=true
+
+# 3. Create the Final Error Bin (Queue)
+rabbitmqadmin declare queue name=FINAL_ERROR_BIN durable=true
+
+# 4. Bind the Error Exchange to the Bin
+rabbitmqadmin declare binding source=LAST_Q destination=FINAL_ERROR_BIN routing_key=lastRk 
+
+rabbitmqadmin declare binding source=exchange2 destination=queue2 routing_key=queue2
+-->
+
+<!-- 
+rabbitmqadmin publish exchange=amq.default routing_key=MAIN_Q payload='{"Test": "Auto-DLX"}'
+-->
