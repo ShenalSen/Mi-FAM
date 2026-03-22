@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="RabbitMqProxyServiceInSequence" xmlns="http://ws.apache.org/ns/synapse" trace="disable" onError="fault">
+    <header name="To" scope="default" value="rabbitmq:/?rabbitmq.connection.factory=SampleConnectionFactory&amp;
+        rabbitmq.queue.name=queue2&amp; 
+        rabbitmq.exchange.name=exchange2&amp;
+        rabbitmq.queue.routing.key=queue2&amp;
+        rabbitmq.queue.autodeclare=false&amp;
+        rabbitmq.publisher.confirms.enabled=true"/>
+    <call>
+        <endpoint key="RabbitMQ-Endpoint"/>
+    </call>
+    <property name="ACKNOWLEDGE" value="true" scope="axis2" type="STRING"/>
+    <respond/>
+</sequence>
+
+<!-- wrong_queue -->
