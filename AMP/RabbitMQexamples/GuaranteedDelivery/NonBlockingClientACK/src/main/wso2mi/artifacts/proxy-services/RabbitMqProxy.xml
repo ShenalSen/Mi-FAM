@@ -40,7 +40,7 @@
 # 1. Create the Main Queue
 rabbitmqadmin declare queue name=MAIN_Q durable=true arguments='{"x-dead-letter-exchange": "LAST_Q", "x-dead-letter-routing-key": "lastRk"}'
 
-# 2. Create the Last (Error) Exchange
+# 2. Create the Last Exchange
 rabbitmqadmin declare exchange name=LAST_Q type=direct durable=true
 
 # 3. Create the Final Error Bin (Queue)
@@ -53,5 +53,5 @@ rabbitmqadmin declare binding source=exchange2 destination=queue2 routing_key=qu
 -->
 
 <!-- 
- exchange=amq.default routing_key=MAIN_Q payload='{"Test": "Auto-DLX"}'
+rabbitmqadmin publish exchange=amq.default routing_key=MAIN_Q payload='{"Test": "Auto-DLX"}'
 -->
