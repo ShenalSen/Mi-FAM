@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proxy xmlns="http://ws.apache.org/ns/synapse" name="OrderProcessingService" transports="rabbitmq" startOnLoad="true">
+    <target>
+        <inSequence>
+            <call>
+                <endpoint xmlns="http://ws.apache.org/ns/synapse">
+                    <http method="POST" uri-template="http://localhost:8290/orders"/>
+                </endpoint>
+            </call>
+            <log level="full">
+                <property name="Info" value="Your order has been placed successfully."/>
+            </log>
+            <respond/>
+        </inSequence>
+        <faultSequence>
+            <payloadFactory media-type="xml">
+                <format>
+                    <Error>$1</Error>
+                </format>
+                <args>
+                    <arg evaluator="xml" expression="get-property('ERROR_MESSAGE')"/>
+                </args>
+            </payloadFactory>
+            <respond/>
+        </faultSequence>
+    </target>
+    <parameter name="rabbitmq.queue.name">order-request</parameter>
+    <parameter name="rabbitmq.connection.factory">AMQPConnectionFactory</parameter>
+</proxy>
