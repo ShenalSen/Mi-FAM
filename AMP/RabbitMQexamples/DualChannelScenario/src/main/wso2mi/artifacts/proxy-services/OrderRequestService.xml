@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proxy xmlns="http://ws.apache.org/ns/synapse" name="OrderRequestService" transports="http https" startOnLoad="true">
+    <description/>
+    <target>
+        <inSequence>
+            <property name="rabbitmq.message.content.type" value="Content-Type" scope="axis2"/>
+            <property name="TRANSPORT_HEADERS" scope="axis2" action="remove"/>
+            <call>
+                <endpoint>
+                    <address uri="rabbitmq:/order-request?rabbitmq.server.host.name=localhost&amp;rabbitmq.server.port=5672&amp;rabbitmq.server.user.name=guest&amp;rabbitmq.server.password=guest"/>
+                </endpoint>
+            </call>
+            <respond/>
+        </inSequence>
+    </target>
+</proxy>
