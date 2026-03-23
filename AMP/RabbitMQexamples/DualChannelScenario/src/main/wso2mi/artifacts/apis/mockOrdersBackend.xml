@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<api context="/orders" name="mockOrdersBackend" xmlns="http://ws.apache.org/ns/synapse">
+    <resource methods="POST">
+        <inSequence>
+            <property name="messageType" value="application/json" scope="axis2"/>
+            <payloadFactory media-type="json">
+                <format>{"message":"Order created"}</format>
+                <args/>
+            </payloadFactory>
+            <respond/>
+        </inSequence>
+        <faultSequence>
+            <payloadFactory media-type="json">
+                <format>{"error":"Error processing order"}</format>
+                <args/>
+            </payloadFactory>
+            <respond/>
+        </faultSequence>
+    </resource>
+</api>
