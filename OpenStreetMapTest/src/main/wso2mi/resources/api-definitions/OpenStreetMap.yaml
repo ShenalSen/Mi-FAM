@@ -1,0 +1,14 @@
+openapi: 3.0.1
+info:
+  title: OpenStreetMap
+  description: API Definition of OpenStreetMap
+  version: 1.0.0
+servers:
+- url: http://localhost:8290/openstreetmap
+- url: https://localhost:8253/openstreetmap
+paths:
+  /:
+    get:
+      responses:
+        default:
+          description: Default response

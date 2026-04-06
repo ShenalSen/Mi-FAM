@@ -1,0 +1,10 @@
+---
+key: "OpenStreetMap-1.0.0"
+name : "OpenStreetMap"
+displayName : "OpenStreetMap"
+description: "OpenStreetMap"
+version: "1.0.0"
+serviceUrl: "https://{MI_HOST}:{MI_PORT}/openstreetmap"
+definitionType: "OAS3"
+securityType: "BASIC"
+mutualSSLEnabled: false
