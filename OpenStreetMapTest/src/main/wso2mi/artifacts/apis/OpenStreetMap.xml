@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<api context="/openstreetmap" name="OpenStreetMap" xmlns="http://ws.apache.org/ns/synapse">
+    <resource methods="GET" uri-template="/">
+        <inSequence>
+            <header name="Accept-Encoding" value="gzip" scope="transport"/>
+            <property name="User-Agent" value="WSO2-Insurance-Demo/1.0" scope="transport"/>
+            <property name="uri.var.nominatimUrl" value="https://nominatim.openstreetmap.org/details?osmtype=R&amp;osmid=175905&amp;format=json" scope="default" type="STRING"/>
+
+            <call>
+                <endpoint>
+                    <http method="GET" uri-template="{uri.var.nominatimUrl}"/>
+                </endpoint>
+            </call>
+            
+            <log level="custom">
+                <property name="Content Length" expression="json-eval($.length())"/>
+            </log>
+            <log level="full"/>
+            <respond/>
+        </inSequence>
+        <faultSequence>
+        </faultSequence>
+    </resource>
+</api>
