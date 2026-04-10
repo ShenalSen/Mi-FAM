@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="InjectXMLTaskSequence" trace="disable" xmlns="http://ws.apache.org/ns/synapse">
+    <log category="INFO" logMessageID="false" logFullPayload="false">
+        <message>City = ${xpath(&quot;//city&quot;)}</message>
+    </log>
+    <drop/>
+</sequence>
